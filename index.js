@@ -17,10 +17,6 @@ var commands = [
 	{ name: 'michalCWEL', body: '<15:25:36> "Zaq": Zgadzam sie tez!'}
 ];
 
-// for(var i=0; i < commands.length; i++){
-// 			console.log(commands[i].body);
-// 			}
-
 bot.on('login', function() {
     //bot.say('Kanapka, malo hp');
 	bot.channelCommands = {};
@@ -60,30 +56,6 @@ function findAdmin(){
 		});
 	})
 }
-/*
-function findAdmin(){
-	console.log('Find ADmin');
-	bot.clientlist(function(data){
-		data.filter(function(obj){
-			if(obj.client_nickname === adminName){
-				if(!afterFirstRun){
-					updateCommands(null, obj.cid);
-				}
-				else if(obj.cid != botCid){
-					bot.clientmove(botId, obj.cid, function(err, dat){
-						if(err){
-							throw err;
-						}
-						botCid = obj.cid;
-						console.log(dat+' in find admin');
-					});
-					
-				}
-				return;
-			}
-		});
-	})
-}*/
 
 function updateCommands(err, admin){
 	console.log('Update Commands');
@@ -100,8 +72,6 @@ function updateCommands(err, admin){
 				}
 				botId = data.clid;
 				botCid = channel;
-				//console.log(dat);
-				//bot.sayChannel('Kanapka, malo hp', 5);
 				commands.filter(function(lajt){
 					bot.addChannelCmd(lajt.name, channel, function(User){
 						bot.sayChannel(lajt.body, channel);
@@ -109,17 +79,6 @@ function updateCommands(err, admin){
 				})
 				
 				afterFirstRun = true;
-				//bot.addChannelCmd('kanapka', 5, function(User) {
-				//	bot.sayChannel('', 5);
-				//});
 			})
 	})
 }
-
-
-/*
-var mins = 60,
-    the_interval = mins * 60 * 1000;
-setInterval(function() {
-	
-}, the_interval);*/
