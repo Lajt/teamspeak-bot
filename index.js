@@ -1,5 +1,7 @@
 var bot = require('alfred-teamspeak');
 var cfg = require('./cfg.js');
+var request = require('request');
+var easypedia = require("easypedia");
 
 var adminName = 'definitely not lajt';
 var adminId = 2;
@@ -36,8 +38,22 @@ bot.addGlobalCmd('bot', function(User) {
     bot.sayChannel('Kanapka, malo hp', 1);
 }, false, 'bot', 'The bot will send you a private message');
 
+//apiCall('poland');
+function apiCall(query, callback){
+	query = query.join(' ').trim();
+	console.log(query);
+	var options = {language: "Pl", cache: true};
+	easypedia(query, options, function(err, text){
+		if(err){
+			console.log('error');
+			return callback('error', null);
+		}
+		
+		console.log(text);
+		return callback(null, text.sections[0].content[0].text);
+	});
 
-
+}
 
 function findAdmin(){
 	//console.log('Find ADmin');
@@ -77,7 +93,17 @@ function updateCommands(err, admin){
 						bot.sayChannel(lajt.body, channel);
 					});
 				})
-				
+				bot.addChannelCmd('wiki', channel, function(t){
+						//console.log(t);
+						//bot.sayChannel('t: '+t.info.params+' d: '+t.detail.msg, channel);
+						apiCall(t.info.params, function(err, text){
+							if(err){
+								bot.sayChannel('[color=red]Jakiś ten... Fejk.[/color]', channel);
+								return;
+							}
+								bot.sayChannel('[color=green]'+text+'[/color]', channel);							
+						})
+					});
 				afterFirstRun = true;
 			})
 	})

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "alfred-teamspeak": "^1.9.2"
+    "alfred-teamspeak": "^1.9.2",
+    "request": "^2.64.0"
   }
 }
