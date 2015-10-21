@@ -9,16 +9,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "alfred-teamspeak": "^1.9.2",
+    "alfred-teamspeak": "lajt/Alfred",
+    "easypedia": "^3.1.1",
+    "google": "^1.3.0",
     "moment": "^2.10.6",
-    "request": "^2.64.0",
-    "Lajt/Alfred": "*",
-    "easypedia": "*",
-    "google": "*",
-    "moment-countdown": "*"
+    "request": "^2.64.0"
   },
   "devDependencies": {
-    "stumpy": "^0.6.10",
-    "countdown": "*"
+    "countdown": "^2.6.0",
+    "moment-countdown": "0.0.3",
+    "stumpy": "^0.6.10"
   }
 }
