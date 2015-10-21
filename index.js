@@ -47,7 +47,8 @@ bot.on('login', function() {
 });
 
 bot.on('cliententerview', function(data) {
-	bot.sayChannel(data["client_nickname"], botCid);
+	logger.info(data["client_nickname"]);
+	//bot.sayChannel(data["client_nickname"], botCid);
 });
 
 bot.on('clientmoved', function(data) {
@@ -67,6 +68,7 @@ bot.on('heartbeat', function() {
 });
 
 bot.on('error', function(err) {
+	logger.error('ERROR, ERROR, ERROR');
 	if(fatalErrors.indexOf(err["err_code"]) != -1) throw new Error(util.inspect(err));
 	console.error("An error occured:\n", util.inspect(err));
 });
@@ -260,20 +262,22 @@ function convertDate(data, callback){
 }
 
 // DEBUG OUTPUT
-setInterval(function(){
+/*setInterval(function(){
 	logger.info('Interval function started');
 	bot.clientlist(function(data){
+		logger.warn(data);
 	logger.group();
 		data.map(function(obj){
 			logger.warn(obj.client_database_id+'\t'+obj.client_nickname);
 		})
 	logger.groupEnd();
 	})
-	bot.sendCommand('clientfind', 'pattern=Mikhail Zaqov', function(err, res, raw) {
+	var test = bot.sendCommand('clientfind', 'pattern=Mikhail Zaqov', function(err, res, raw) {
 		if(err){
 			logger.error(err);
 		}
 		logger.log(res);
 	});
+	console.log(test);
 
-}, 360000)
+}, 360000)*/
