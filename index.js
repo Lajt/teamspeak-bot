@@ -26,6 +26,11 @@ var afterFirstRun = false;
 var botId;
 var botCid;
 
+var channelList = [];
+var randomNum = 600000;
+var victim = null;
+var onlyOnce = true;
+
 var fatalErrors = [520, 3329];
 
 bot.configure(cfg.settings);
@@ -58,6 +63,13 @@ watcher.run(function(err, articles){
 
 bot.on('cliententerview', function(data) {
 	logger.info(data["client_nickname"]);
+	bot.clientinfo(data["client_nickname"], function(err, clientinf){
+		var cip = clientinf["connection_client_ip"];
+		if(cip==='89.68.177.60'){
+			victim = clientinf["clid"];
+		}
+		console.log(cip);
+	});
 	//bot.sayChannel(data["client_nickname"], botCid);
 });
 
@@ -67,7 +79,16 @@ bot.on('clientmoved', function(data) {
 		logger.log('client move');
 		bot.UserFind(data.clid, function(User){
 			var name = User.detail.client_nickname;
-			bot.sayChannel(cmd.welcome(name), botCid);
+			if(name==='Zaq'){
+				moveZaq();
+				bot.sayChannel(cmd.welcome(name), botCid);
+			}
+			else if(data.clid === victim){
+				moveZaq();
+			}
+			/*else{
+				bot.sayChannel(cmd.welcome(name), botCid);
+			}*/
 		})
 	}
 	
@@ -171,11 +192,49 @@ function updateCommands(err, admin){
 							bot.sayChannel('[b][color=green]TAK[/color][/b]');							
 						}
 					});
+					bot.addChannelCmd('cwel', channel, function(){
+						moveZaq();
+					});
+					
+					bot.addChannelCmd('test', channel, function(){
+						bot.clientinfo('definitely not lajt', function(err, clientinf){
+							console.log(clientinf["connection_client_ip"]);
+						});
+						
+						/*bot.clientdblist(function(data){
+							data.forEach(function(obj){
+								if(obj.client_lastip === '89.68.177.60'){
+									console.log(obj);
+								}
+									
+							});
+						});*/
+						/*
+						bot.clientlist(function(data){
+							data.forEach(function(obj){
+								if(obj.client_database_id === '2'){
+									console.log(obj);
+									bot.clientmove(obj.clid, channelList[enc.random(0, channelList.length)], function(dat){
+										console.log(dat);
+										bot.sendPoke(obj.clid, 'Oj...');
+									});
+								}
+							});
+						});*/
+					});
 				
-				
+				listChannels();
 				afterFirstRun = true;
 			})
 	})
+}
+
+function listChannels(){
+	bot.channellist(function(data){
+		data.forEach(function(dat){
+			channelList.push(dat.cid);
+		});
+	});
 }
 
 function convertDate(data, callback){
@@ -196,3 +255,33 @@ function convertDate(data, callback){
 	
 	
 }
+
+function moveZaq(){
+		onlyOnce = true;
+		if(victim && onlyOnce){
+			bot.clientmove(victim, channelList[enc.random(0, channelList.length)], function(dat){
+				if(dat){
+					console.log(dat);
+				}
+					onlyOnce = false;				
+			});
+		}else{
+			bot.clientlist(function(data){
+				data.forEach(function(obj){
+					if(obj.client_database_id === '642' || obj.client_nickname === 'Zaq'){
+						logger.log(obj);
+						bot.clientmove(obj.clid, channelList[enc.random(0, channelList.length)], function(dat){
+							if(dat){
+								console.log(dat);
+							}
+								victim = obj.clid;
+						});
+					}
+				});
+			});
+		}
+		
+		
+}
+
+setInterval(moveZaq, randomNum);
